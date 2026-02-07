@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'app_colors.dart';
 
 /// ALU Student Assistant application theme.
@@ -25,13 +24,13 @@ class AppTheme {
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
         ),
-        cardTheme: CardTheme(
+        // FIXED: Changed CardTheme to CardThemeData and removed childPadding
+        cardTheme: CardThemeData(
           color: AppColors.card,
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          childPadding: const EdgeInsets.all(16),
         ),
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: AppColors.textPrimary),
