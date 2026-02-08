@@ -13,6 +13,9 @@ abstract class AttendanceRepository {
   /// Returns all attendance records.
   List<AttendanceRecord> getAllRecords();
 
+  /// Removes a record by id.
+  void removeRecord(String id);
+
   /// Listenable that emits the current list whenever it changes.
   ValueListenable<List<AttendanceRecord>> get recordsListenable;
 }
@@ -53,9 +56,15 @@ class InMemoryAttendanceRepository implements AttendanceRepository {
   }
 
   @override
+  void removeRecord(String id) {
+    _records.removeWhere((r) => r.id == id);
+    _emit();
+  }
+
+  @override
   ValueListenable<List<AttendanceRecord>> get recordsListenable => _notifier;
 
   void _emit() {
-    _notifier.value = List.unmodifiable(_records);
+    _notifier.value = List<AttendanceRecord>.from(_records);
   }
 }

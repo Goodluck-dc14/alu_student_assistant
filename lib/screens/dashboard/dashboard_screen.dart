@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/attendance/widgets/attendance_history_section.dart';
+import '../../models/attendance_record.dart';
 import '../../services/attendance_service.dart';
 import 'dashboard_view_model.dart';
 
@@ -17,10 +18,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double attendance = attendanceService.calculateAttendancePercentage();
-    final String attendanceText = '${attendance.toStringAsFixed(0)}%';
-    final bool showWarning = attendance < 75;
-
     return Scaffold(
       backgroundColor: const Color(0xFF071A2D),
       appBar: AppBar(
@@ -46,15 +43,33 @@ class DashboardScreen extends StatelessWidget {
               _TopRow(date: viewModel.today, week: viewModel.academicWeek),
               const SizedBox(height: 12),
 
-              if (showWarning)
-                const _WarningBanner(text: 'ATTENDANCE WARNING: Below 75%'),
-
-              const SizedBox(height: 12),
-
-              _MetricTilesRow(
-                pendingCount: viewModel.pendingAssignmentsCount,
-                attendanceText: attendanceText,
-                showAttendanceWarning: showWarning,
+              ValueListenableBuilder<List<AttendanceRecord>>(
+                valueListenable: attendanceService.recordsListenable,
+                builder: (context, records, __) {
+                  final bool hasRecords = records.isNotEmpty;
+                  final double attendance =
+                      attendanceService.calculateAttendancePercentage();
+                  final String attendanceText = hasRecords
+                      ? '${attendance.toStringAsFixed(0)}%'
+                      : 'N/A';
+                  final bool showWarning =
+                      hasRecords && attendance < 75;
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (showWarning)
+                        const _WarningBanner(
+                            text: 'ATTENDANCE WARNING: Below 75%'),
+                      const SizedBox(height: 12),
+                      _MetricTilesRow(
+                        pendingCount: viewModel.pendingAssignmentsCount,
+                        attendanceText: attendanceText,
+                        showAttendanceWarning: showWarning,
+                      ),
+                    ],
+                  );
+                },
               ),
 
               const SizedBox(height: 12),
@@ -444,7 +459,11 @@ class _AttendanceHistoryCard extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
-            AttendanceHistorySection(attendanceService: attendanceService),
+            AttendanceHistorySection(
+              attendanceService: attendanceService,
+              title: '',
+              excludeToday: true,
+            ),
           ],
         ),
       ),

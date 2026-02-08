@@ -6,50 +6,35 @@ import 'data/attendance_repository.dart';
 import 'features/attendance/widgets/attendance_history_section.dart';
 import 'features/attendance/widgets/attendance_metric_card.dart';
 import 'features/attendance/widgets/attendance_warning_banner.dart';
-import 'models/attendance_record.dart';
 import 'providers/session_provider.dart';
 import 'services/attendance_service.dart';
 import 'screens/login_screen.dart';
 import 'screens/root_shell.dart';
 
 void main() {
-  final repository = InMemoryAttendanceRepository(
-    initialRecords: _mockAttendanceRecords(),
-  );
+  final repository = InMemoryAttendanceRepository(initialRecords: []);
   final attendanceService = AttendanceService(repository);
 
-  runApp(ALUStudentAssistantApp(attendanceService: attendanceService));
-}
-
-List<AttendanceRecord> _mockAttendanceRecords() {
-  final now = DateTime.now();
-  return [
-    AttendanceRecord(
-      id: '1',
-      sessionTitle: 'Introduction to Linux',
-      sessionDate: now.subtract(const Duration(days: 1)),
-      sessionType: 'Class',
-      isPresent: true,
-    ),
-    AttendanceRecord(
-      id: '2',
-      sessionTitle: 'Python Programming',
-      sessionDate: now.subtract(const Duration(days: 2)),
-      sessionType: 'Class',
-      isPresent: true,
-    ),
-  ];
+  runApp(ALUStudentAssistantApp(
+    attendanceService: attendanceService,
+    attendanceRepository: repository,
+  ));
 }
 
 class ALUStudentAssistantApp extends StatelessWidget {
-  const ALUStudentAssistantApp({super.key, required this.attendanceService});
+  const ALUStudentAssistantApp({
+    super.key,
+    required this.attendanceService,
+    required this.attendanceRepository,
+  });
 
   final AttendanceService attendanceService;
+  final AttendanceRepository attendanceRepository;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SessionProvider(),
+      create: (_) => SessionProvider(attendanceRepository: attendanceRepository),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'ALU Student Assistant',

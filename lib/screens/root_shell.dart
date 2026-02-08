@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/academic_session.dart';
+import '../providers/session_provider.dart';
 import '../services/attendance_service.dart';
 
 import 'dashboard/dashboard_screen.dart';
@@ -24,32 +27,8 @@ class _RootShellState extends State<RootShell> {
   @override
   void initState() {
     super.initState();
-
     _dashboardVM = DashboardViewModel(
       termStartDate: DateTime(DateTime.now().year, 1, 15),
-    );
-
-    // TEMP dummy data for assignments & sessions (replace later with real data)
-    _dashboardVM.setData(
-      assignments: [
-        DashboardAssignment(
-          title: 'Assignment 1',
-          dueDate: DateTime.now().add(const Duration(days: 2)),
-          courseName: 'Mobile Dev (Flutter)',
-          isCompleted: false,
-        ),
-      ],
-      sessions: [
-        DashboardSession(
-          title: 'Mastery Session',
-          date: DateTime.now(),
-          startMinutes: 9 * 60,
-          endMinutes: 10 * 60 + 30,
-          type: 'Mastery Session',
-          location: 'Room B2',
-          isPresent: true,
-        ),
-      ],
     );
   }
 
@@ -61,6 +40,36 @@ class _RootShellState extends State<RootShell> {
 
   @override
   Widget build(BuildContext context) {
+    final sessionProvider = context.watch<SessionProvider>();
+    final today = DateTime.now();
+    final todayStart = DateTime(today.year, today.month, today.day);
+    final todayEnd = todayStart.add(const Duration(days: 1));
+    final todaySessions = sessionProvider.sessions
+        .where((s) {
+          final d = DateTime(s.date.year, s.date.month, s.date.day);
+          return !d.isBefore(todayStart) && d.isBefore(todayEnd);
+        })
+        .map((s) => DashboardSession(
+              title: s.title,
+              date: s.date,
+              startMinutes: s.startDateTime.hour * 60 + s.startDateTime.minute,
+              endMinutes: s.endDateTime.hour * 60 + s.endDateTime.minute,
+              type: AcademicSession.typeLabel(s.type),
+              location: s.location,
+              isPresent: s.attendance == AttendanceStatus.present
+                  ? true
+                  : s.attendance == AttendanceStatus.absent
+                      ? false
+                      : null,
+            ))
+        .toList()
+      ..sort((a, b) => a.startMinutes.compareTo(b.startMinutes));
+
+    _dashboardVM.setData(
+      assignments: [],
+      sessions: todaySessions,
+    );
+
     final pages = <Widget>[
       DashboardScreen(
         viewModel: _dashboardVM,
