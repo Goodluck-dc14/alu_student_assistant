@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/attendance_repository.dart';
@@ -6,6 +7,7 @@ import 'features/attendance/widgets/attendance_history_section.dart';
 import 'features/attendance/widgets/attendance_metric_card.dart';
 import 'features/attendance/widgets/attendance_warning_banner.dart';
 import 'models/attendance_record.dart';
+import 'providers/session_provider.dart';
 import 'services/attendance_service.dart';
 import 'screens/login_screen.dart';
 import 'screens/root_shell.dart';
@@ -46,17 +48,19 @@ class ALUStudentAssistantApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ALU Student Assistant',
-      theme: AppTheme.dark,
-      initialRoute: '/',
-      routes: {
-        // Points to your new Login Screen
-        '/': (context) => const LoginScreen(),
-        // Points to the team's Dashboard class below
-        '/dashboard': (context) =>
-            RootShell(attendanceService: attendanceService),
-      },
+    return ChangeNotifierProvider(
+      create: (_) => SessionProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'ALU Student Assistant',
+        theme: AppTheme.dark,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const LoginScreen(),
+          '/dashboard': (context) =>
+              RootShell(attendanceService: attendanceService),
+        },
+      ),
     );
   }
 }
@@ -86,3 +90,4 @@ class AttendanceDemoScreen extends StatelessWidget {
     );
   }
 }
+
