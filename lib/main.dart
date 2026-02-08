@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
+import 'data/assignment_repository.dart';
 import 'data/attendance_repository.dart';
 import 'features/attendance/widgets/attendance_history_section.dart';
 import 'features/attendance/widgets/attendance_metric_card.dart';
@@ -14,11 +15,15 @@ import 'screens/root_shell.dart';
 void main() {
   final repository = InMemoryAttendanceRepository(initialRecords: []);
   final attendanceService = AttendanceService(repository);
+  final assignmentRepository = InMemoryAssignmentRepository();
 
-  runApp(ALUStudentAssistantApp(
-    attendanceService: attendanceService,
-    attendanceRepository: repository,
-  ));
+  runApp(
+    ALUStudentAssistantApp(
+      attendanceService: attendanceService,
+      attendanceRepository: repository,
+      assignmentRepository: assignmentRepository,
+    ),
+  );
 }
 
 class ALUStudentAssistantApp extends StatelessWidget {
@@ -26,15 +31,18 @@ class ALUStudentAssistantApp extends StatelessWidget {
     super.key,
     required this.attendanceService,
     required this.attendanceRepository,
+    required this.assignmentRepository,
   });
 
   final AttendanceService attendanceService;
   final AttendanceRepository attendanceRepository;
+  final AssignmentRepository assignmentRepository;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SessionProvider(attendanceRepository: attendanceRepository),
+      create: (_) =>
+          SessionProvider(attendanceRepository: attendanceRepository),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'ALU Student Assistant',
@@ -42,8 +50,10 @@ class ALUStudentAssistantApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const LoginScreen(),
-          '/dashboard': (context) =>
-              RootShell(attendanceService: attendanceService),
+          '/dashboard': (context) => RootShell(
+            attendanceService: attendanceService,
+            assignmentRepository: assignmentRepository,
+          ),
         },
       ),
     );
@@ -75,4 +85,3 @@ class AttendanceDemoScreen extends StatelessWidget {
     );
   }
 }
-
