@@ -31,6 +31,15 @@ class AttendanceService {
     return records;
   }
 
+  /// Attendance history excluding today (for dashboard to avoid duplicating "Today's Sessions").
+  List<AttendanceRecord> get historyExcludingToday {
+    final today = DateTime.now();
+    final todayStart = DateTime(today.year, today.month, today.day);
+    return history
+        .where((r) => r.sessionDate.isBefore(todayStart))
+        .toList();
+  }
+
   /// The repository's listenable for reactive UI updates.
   ValueListenable<List<AttendanceRecord>> get recordsListenable =>
       _repository.recordsListenable;
