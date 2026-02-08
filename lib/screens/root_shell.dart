@@ -5,7 +5,7 @@ import '../services/attendance_service.dart';
 import 'dashboard/dashboard_screen.dart';
 import 'dashboard/dashboard_view_model.dart';
 import 'assignments/assignments_screen.dart';
-import 'schedule/schedule_screen.dart';
+import 'schedule_screen.dart';
 
 class RootShell extends StatefulWidget {
   const RootShell({super.key, required this.attendanceService});
