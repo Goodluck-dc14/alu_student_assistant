@@ -7,8 +7,8 @@ import 'features/attendance/widgets/attendance_metric_card.dart';
 import 'features/attendance/widgets/attendance_warning_banner.dart';
 import 'models/attendance_record.dart';
 import 'services/attendance_service.dart';
-// Ensure this file exists in lib/screens/
-import 'screens/login_screen.dart'; 
+import 'screens/login_screen.dart';
+import 'screens/root_shell.dart';
 
 void main() {
   final repository = InMemoryAttendanceRepository(
@@ -40,10 +40,7 @@ List<AttendanceRecord> _mockAttendanceRecords() {
 }
 
 class ALUStudentAssistantApp extends StatelessWidget {
-  const ALUStudentAssistantApp({
-    super.key,
-    required this.attendanceService,
-  });
+  const ALUStudentAssistantApp({super.key, required this.attendanceService});
 
   final AttendanceService attendanceService;
 
@@ -57,26 +54,22 @@ class ALUStudentAssistantApp extends StatelessWidget {
         // Points to your new Login Screen
         '/': (context) => const LoginScreen(),
         // Points to the team's Dashboard class below
-        '/dashboard': (context) => AttendanceDemoScreen(attendanceService: attendanceService),
+        '/dashboard': (context) =>
+            RootShell(attendanceService: attendanceService),
       },
     );
   }
 }
 
 class AttendanceDemoScreen extends StatelessWidget {
-  const AttendanceDemoScreen({
-    super.key,
-    required this.attendanceService,
-  });
+  const AttendanceDemoScreen({super.key, required this.attendanceService});
 
   final AttendanceService attendanceService;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-      ),
+      appBar: AppBar(title: const Text('Dashboard')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
