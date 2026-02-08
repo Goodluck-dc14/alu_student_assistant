@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import '../core/constants/attendance_constants.dart';
 import '../data/attendance_repository.dart';
 import '../models/attendance_record.dart';
@@ -20,8 +19,9 @@ class AttendanceService {
 
   /// True when attendance is below the threshold (75%).
   bool get isBelowThreshold {
-    return attendancePercentage < AttendanceConstants.attendanceThreshold &&
-        _repository.getAllRecords().isNotEmpty;
+    final records = _repository.getAllRecords();
+    return records.isNotEmpty &&
+        attendancePercentage < AttendanceConstants.attendanceThreshold;
   }
 
   /// Attendance history sorted by date (newest first).
@@ -34,4 +34,8 @@ class AttendanceService {
   /// The repository's listenable for reactive UI updates.
   ValueListenable<List<AttendanceRecord>> get recordsListenable =>
       _repository.recordsListenable;
+
+  /// Backward-compatible helper used by UI screens/widgets.
+  /// Returns a non-null percentage (0-100).
+  double calculateAttendancePercentage() => attendancePercentage;
 }
