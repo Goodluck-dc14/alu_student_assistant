@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../services/attendance_service.dart';
-
 import 'dashboard/dashboard_screen.dart';
 import 'dashboard/dashboard_view_model.dart';
 import 'assignments/assignments_screen.dart';
 import 'schedule/schedule_screen.dart';
 
 class RootShell extends StatefulWidget {
-  const RootShell({super.key, required this.attendanceService});
-
+  final DashboardViewModel dashboardViewModel;
   final AttendanceService attendanceService;
+
+  const RootShell({
+    super.key,
+    required this.dashboardViewModel,
+    required this.attendanceService,
+  });
 
   @override
   State<RootShell> createState() => _RootShellState();
@@ -19,59 +23,25 @@ class RootShell extends StatefulWidget {
 class _RootShellState extends State<RootShell> {
   int _index = 0;
 
-  late final DashboardViewModel _dashboardVM;
+  late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
-
-    _dashboardVM = DashboardViewModel(
-      termStartDate: DateTime(DateTime.now().year, 1, 15),
-    );
-
-    // TEMP dummy data for assignments & sessions (replace later with real data)
-    _dashboardVM.setData(
-      assignments: [
-        DashboardAssignment(
-          title: 'Assignment 1',
-          dueDate: DateTime.now().add(const Duration(days: 2)),
-          courseName: 'Mobile Dev (Flutter)',
-          isCompleted: false,
-        ),
-      ],
-      sessions: [
-        DashboardSession(
-          title: 'Mastery Session',
-          date: DateTime.now(),
-          startMinutes: 9 * 60,
-          endMinutes: 10 * 60 + 30,
-          type: 'Mastery Session',
-          location: 'Room B2',
-          isPresent: true,
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _dashboardVM.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final pages = <Widget>[
+    _pages = [
       DashboardScreen(
-        viewModel: _dashboardVM,
+        viewModel: widget.dashboardViewModel,
         attendanceService: widget.attendanceService,
       ),
       const AssignmentsScreen(),
       const ScheduleScreen(),
     ];
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_index],
+      body: _pages[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),

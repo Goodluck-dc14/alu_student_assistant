@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'core/theme/app_theme.dart';
 import 'data/attendance_repository.dart';
 import 'models/attendance_record.dart';
 import 'services/attendance_service.dart';
+
 import 'screens/login_screen.dart';
 import 'screens/root_shell.dart';
 import 'screens/dashboard/dashboard_view_model.dart';
-import 'widgets/attendance_warning_banner.dart';
-import 'widgets/attendance_metric_card.dart';
-import 'widgets/attendance_history_section.dart';
 
 void main() {
   final repository = InMemoryAttendanceRepository(
@@ -57,42 +56,13 @@ class ALUStudentAssistantApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginScreen(),
-        // Points to the team's Dashboard class below
-        '/dashboard': (context) =>
-            RootShell(attendanceService: attendanceService),
 
-        // ✅ After login, go here (bottom nav with 3 tabs)
+        // Main app shell (bottom nav with 3 tabs)
         '/app': (context) => RootShell(
           dashboardViewModel: dashboardVM,
           attendanceService: attendanceService,
         ),
       },
-    );
-  }
-}
-
-class AttendanceDemoScreen extends StatelessWidget {
-  const AttendanceDemoScreen({super.key, required this.attendanceService});
-
-  final AttendanceService attendanceService;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            AttendanceWarningBanner(attendanceService: attendanceService),
-            const SizedBox(height: 16),
-            AttendanceMetricCard(attendanceService: attendanceService),
-            const SizedBox(height: 24),
-            AttendanceHistorySection(attendanceService: attendanceService),
-          ],
-        ),
-      ),
     );
   }
 }

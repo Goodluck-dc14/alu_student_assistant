@@ -44,9 +44,9 @@ class AttendanceWarningBanner extends StatelessWidget {
                 child: Text(
                   message,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
