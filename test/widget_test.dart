@@ -34,4 +34,4 @@ void main() {
   });
 }
 
-class MockAttendanceService extends Mock implements AttendanceService {}
+class MockAttendanceService with Mock implements AttendanceService {}
