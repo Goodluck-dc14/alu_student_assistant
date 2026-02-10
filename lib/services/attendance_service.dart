@@ -35,7 +35,17 @@ class AttendanceService {
   ValueListenable<List<AttendanceRecord>> get recordsListenable =>
       _repository.recordsListenable;
 
+<<<<<<< Updated upstream
   /// Backward-compatible helper used by UI screens/widgets.
   /// Returns a non-null percentage (0-100).
   double calculateAttendancePercentage() => attendancePercentage;
 
+=======
+  /// Returns attendance percentage (0.0 - 100.0).
+  /// TODO: replace this placeholder with the actual calculation using your
+  /// service's attendance data.
+  double calculateAttendancePercentage() {
+    return 0.0;
+  }
+}
+>>>>>>> Stashed changes

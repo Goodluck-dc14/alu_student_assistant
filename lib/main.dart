@@ -5,13 +5,19 @@ import 'data/attendance_repository.dart';
 import 'models/attendance_record.dart';
 import 'services/attendance_service.dart';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import 'screens/login_screen.dart';
 import 'screens/root_shell.dart';
 =======
+=======
+>>>>>>> Stashed changes
 
 import 'screens/root_shell.dart';
 import 'screens/dashboard/dashboard_view_model.dart';
 import 'screens/login_screen.dart';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 void main() {
@@ -62,21 +68,28 @@ class ALUStudentAssistantApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginScreen(),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         // Points to the team's Dashboard class below
         '/dashboard': (context) =>
             RootShell(attendanceService: attendanceService),
 =======
+=======
+>>>>>>> Stashed changes
 
         // ✅ After login, go here (bottom nav with 3 tabs)
         '/app': (context) => RootShell(
           viewModel: dashboardVM,
           attendanceService: attendanceService,
         ),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       },
     );
   }
 }
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
 class AttendanceDemoScreen extends StatelessWidget {
@@ -104,5 +117,7 @@ class AttendanceDemoScreen extends StatelessWidget {
     );
   }
 }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
