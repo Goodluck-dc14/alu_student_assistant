@@ -11,21 +11,26 @@ class AttendanceHistorySection extends StatelessWidget {
     required this.attendanceService,
     this.title = 'Attendance History',
     this.maxItems,
+    this.excludeToday = false,
   });
 
   final AttendanceService attendanceService;
   final String title;
   final int? maxItems;
 
+  /// When true, only past sessions are shown (avoids duplicating "Today's Sessions" on dashboard).
+  final bool excludeToday;
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<AttendanceRecord>>(
       valueListenable: attendanceService.recordsListenable,
-      builder: (context, records, _) {
-        final history = attendanceService.history;
-        final displayList = maxItems != null
-            ? history.take(maxItems!).toList()
-            : history;
+      builder: (context, records, __) {
+        final history = excludeToday
+            ? attendanceService.historyExcludingToday
+            : attendanceService.history;
+        final displayList =
+            maxItems != null ? history.take(maxItems!).toList() : history;
 
         if (displayList.isEmpty) {
           return const SizedBox.shrink();
@@ -34,15 +39,16 @@ class AttendanceHistorySection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(color: AppColors.textPrimary),
+            if (title.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                ),
               ),
-            ),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

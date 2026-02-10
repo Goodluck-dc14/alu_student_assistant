@@ -20,9 +20,13 @@ class AttendanceMetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<AttendanceRecord>>(
       valueListenable: attendanceService.recordsListenable,
-      builder: (context, _, __) {
-        final percentage = attendanceService.attendancePercentage;
-        final isAtRisk = attendanceService.isBelowThreshold;
+      builder: (context, records, __) {
+        final bool hasRecords = records.isNotEmpty;
+        final String valueText = hasRecords
+            ? '${attendanceService.attendancePercentage.toStringAsFixed(0)}%'
+            : 'N/A';
+        final bool isAtRisk =
+            hasRecords && attendanceService.isBelowThreshold;
 
         return Container(
           padding: const EdgeInsets.all(20),
@@ -40,7 +44,7 @@ class AttendanceMetricCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${percentage.toStringAsFixed(0)}%',
+                valueText,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: isAtRisk ? AppColors.warning : AppColors.background,
                   fontWeight: FontWeight.bold,
