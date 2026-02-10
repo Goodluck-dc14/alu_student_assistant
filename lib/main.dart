@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/attendance_repository.dart';
-import 'features/attendance/widgets/attendance_history_section.dart';
-import 'features/attendance/widgets/attendance_metric_card.dart';
-import 'features/attendance/widgets/attendance_warning_banner.dart';
 import 'models/attendance_record.dart';
 import 'services/attendance_service.dart';
+<<<<<<< Updated upstream
 import 'screens/login_screen.dart';
 import 'screens/root_shell.dart';
+=======
+
+import 'screens/root_shell.dart';
+import 'screens/dashboard/dashboard_view_model.dart';
+import 'screens/login_screen.dart';
+>>>>>>> Stashed changes
 
 void main() {
   final repository = InMemoryAttendanceRepository(
@@ -46,20 +50,34 @@ class ALUStudentAssistantApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create the dashboard VM once so RootShell can reuse it
+    final dashboardVM = DashboardViewModel(
+      termStartDate: DateTime(DateTime.now().year, 1, 15),
+    );
+
     return MaterialApp(
       title: 'ALU Student Assistant',
       theme: AppTheme.dark,
       initialRoute: '/',
       routes: {
-        // Points to your new Login Screen
         '/': (context) => const LoginScreen(),
+<<<<<<< Updated upstream
         // Points to the team's Dashboard class below
         '/dashboard': (context) =>
             RootShell(attendanceService: attendanceService),
+=======
+
+        // ✅ After login, go here (bottom nav with 3 tabs)
+        '/app': (context) => RootShell(
+          viewModel: dashboardVM,
+          attendanceService: attendanceService,
+        ),
+>>>>>>> Stashed changes
       },
     );
   }
 }
+<<<<<<< Updated upstream
 
 class AttendanceDemoScreen extends StatelessWidget {
   const AttendanceDemoScreen({super.key, required this.attendanceService});
@@ -86,3 +104,5 @@ class AttendanceDemoScreen extends StatelessWidget {
     );
   }
 }
+=======
+>>>>>>> Stashed changes

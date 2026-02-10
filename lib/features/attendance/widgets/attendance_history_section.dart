@@ -21,10 +21,11 @@ class AttendanceHistorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<AttendanceRecord>>(
       valueListenable: attendanceService.recordsListenable,
-      builder: (context, records, __) {
+      builder: (context, records, _) {
         final history = attendanceService.history;
-        final displayList =
-            maxItems != null ? history.take(maxItems!).toList() : history;
+        final displayList = maxItems != null
+            ? history.take(maxItems!).toList()
+            : history;
 
         if (displayList.isEmpty) {
           return const SizedBox.shrink();
@@ -37,16 +38,16 @@ class AttendanceHistorySection extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: AppColors.textPrimary),
               ),
             ),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: displayList.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final record = displayList[index];
                 return _AttendanceHistoryTile(record: record);
@@ -61,8 +62,18 @@ class AttendanceHistorySection extends StatelessWidget {
 
 String _monthName(int month) {
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   return months[month - 1];
 }
@@ -92,16 +103,16 @@ class _AttendanceHistoryTile extends StatelessWidget {
                 Text(
                   record.sessionTitle,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: AppColors.background,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: AppColors.background,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${record.sessionType} - $dateStr',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -117,9 +128,11 @@ class _AttendanceHistoryTile extends StatelessWidget {
             child: Text(
               record.isPresent ? 'Present' : 'Absent',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: record.isPresent ? Colors.green.shade800 : AppColors.warningDark,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: record.isPresent
+                    ? Colors.green.shade800
+                    : AppColors.warningDark,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

@@ -38,4 +38,4 @@ class AttendanceService {
   /// Backward-compatible helper used by UI screens/widgets.
   /// Returns a non-null percentage (0-100).
   double calculateAttendancePercentage() => attendancePercentage;
-}
+
