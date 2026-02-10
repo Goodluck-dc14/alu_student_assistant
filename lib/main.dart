@@ -9,8 +9,10 @@ import 'features/attendance/widgets/attendance_metric_card.dart';
 import 'features/attendance/widgets/attendance_warning_banner.dart';
 import 'providers/session_provider.dart';
 import 'services/attendance_service.dart';
+
 import 'screens/login_screen.dart';
 import 'screens/root_shell.dart';
+import 'screens/dashboard/dashboard_view_model.dart';
 
 void main() {
   final repository = InMemoryAttendanceRepository(initialRecords: []);
@@ -55,32 +57,6 @@ class ALUStudentAssistantApp extends StatelessWidget {
             assignmentRepository: assignmentRepository,
           ),
         },
-      ),
-    );
-  }
-}
-
-class AttendanceDemoScreen extends StatelessWidget {
-  const AttendanceDemoScreen({super.key, required this.attendanceService});
-
-  final AttendanceService attendanceService;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            AttendanceWarningBanner(attendanceService: attendanceService),
-            const SizedBox(height: 16),
-            AttendanceMetricCard(attendanceService: attendanceService),
-            const SizedBox(height: 24),
-            AttendanceHistorySection(attendanceService: attendanceService),
-          ],
-        ),
       ),
     );
   }

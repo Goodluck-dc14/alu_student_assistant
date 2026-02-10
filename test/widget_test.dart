@@ -7,13 +7,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'package:alu_student_assistant/main.dart';
+import 'package:alu_student_assistant/services/attendance_service.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    final mockAttendanceService = MockAttendanceService();
+    await tester.pumpWidget(
+      ALUStudentAssistantApp(attendanceService: mockAttendanceService),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -28,3 +33,5 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 }
+
+class MockAttendanceService with Mock implements AttendanceService {}

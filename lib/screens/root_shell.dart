@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../models/academic_session.dart';
 import '../providers/session_provider.dart';
 import '../services/attendance_service.dart';
-
 import 'dashboard/dashboard_screen.dart';
 import 'dashboard/dashboard_view_model.dart';
 import '../features/assignments/assignments_screen.dart';
@@ -21,6 +20,12 @@ class RootShell extends StatefulWidget {
   final AttendanceService attendanceService;
   final AssignmentRepository assignmentRepository;
 
+  const RootShell({
+    super.key,
+    required this.dashboardViewModel,
+    required this.attendanceService,
+  });
+
   @override
   State<RootShell> createState() => _RootShellState();
 }
@@ -28,7 +33,7 @@ class RootShell extends StatefulWidget {
 class _RootShellState extends State<RootShell> {
   int _index = 0;
 
-  late final DashboardViewModel _dashboardVM;
+  late final List<Widget> _pages;
 
   @override
   void initState() {
@@ -79,15 +84,18 @@ class _RootShellState extends State<RootShell> {
 
     final pages = <Widget>[
       DashboardScreen(
-        viewModel: _dashboardVM,
+        viewModel: widget.dashboardViewModel,
         attendanceService: widget.attendanceService,
       ),
       AssignmentsScreen(repository: widget.assignmentRepository),
       const ScheduleScreen(),
     ];
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_index],
+      body: _pages[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),

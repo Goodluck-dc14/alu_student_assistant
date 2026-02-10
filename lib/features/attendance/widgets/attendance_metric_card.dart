@@ -31,9 +31,13 @@ class AttendanceMetricCard extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: isAtRisk ? AppColors.warning.withOpacity(0.2) : AppColors.card,
+            color: isAtRisk
+                ? AppColors.warning.withOpacity(0.2)
+                : AppColors.card,
             borderRadius: BorderRadius.circular(12),
-            border: isAtRisk ? Border.all(color: AppColors.warning, width: 2) : null,
+            border: isAtRisk
+                ? Border.all(color: AppColors.warning, width: 2)
+                : null,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,16 +46,18 @@ class AttendanceMetricCard extends StatelessWidget {
               Text(
                 valueText,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: isAtRisk ? AppColors.warning : AppColors.background,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: isAtRisk ? AppColors.warning : AppColors.background,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 label,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isAtRisk ? AppColors.warningDark : AppColors.textSecondary,
-                    ),
+                  color: isAtRisk
+                      ? AppColors.warningDark
+                      : AppColors.textSecondary,
+                ),
               ),
             ],
           ),

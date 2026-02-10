@@ -53,7 +53,7 @@ class AttendanceHistorySection extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: displayList.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final record = displayList[index];
                 return _AttendanceHistoryTile(record: record);
@@ -68,8 +68,18 @@ class AttendanceHistorySection extends StatelessWidget {
 
 String _monthName(int month) {
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   return months[month - 1];
 }
@@ -99,16 +109,16 @@ class _AttendanceHistoryTile extends StatelessWidget {
                 Text(
                   record.sessionTitle,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: AppColors.background,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: AppColors.background,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${record.sessionType} - $dateStr',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -124,9 +134,11 @@ class _AttendanceHistoryTile extends StatelessWidget {
             child: Text(
               record.isPresent ? 'Present' : 'Absent',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: record.isPresent ? Colors.green.shade800 : AppColors.warningDark,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: record.isPresent
+                    ? Colors.green.shade800
+                    : AppColors.warningDark,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

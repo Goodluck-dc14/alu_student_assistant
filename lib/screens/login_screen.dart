@@ -24,8 +24,13 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(Icons.school_rounded, size: 80, color: AppColors.accent),
+                const Icon(
+                  Icons.school_rounded,
+                  size: 80,
+                  color: AppColors.accent,
+                ),
                 const SizedBox(height: 32),
+
                 Text(
                   'Student Sign-Up',
                   textAlign: TextAlign.center,
@@ -34,7 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
                 const SizedBox(height: 32),
+
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
@@ -45,10 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 16),
+
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true, // This makes the password appear as dots
+                  obscureText: true,
                   validator: (value) {
                     if (value == null || value.length < 6) {
                       return 'Password must be at least 6 characters';
@@ -56,11 +65,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 32),
+
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacementNamed(context, '/dashboard');
+                      // ✅ Navigate into the app shell (with bottom navigation)
+                      Navigator.pushReplacementNamed(context, '/app');
                     }
                   },
                   child: const Text('Sign Up'),
