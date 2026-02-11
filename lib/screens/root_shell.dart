@@ -4,10 +4,11 @@ import 'package:provider/provider.dart';
 import '../models/academic_session.dart';
 import '../providers/session_provider.dart';
 import '../services/attendance_service.dart';
+import '../data/assignment_repository.dart';
+
 import 'dashboard/dashboard_screen.dart';
 import 'dashboard/dashboard_view_model.dart';
-import '../features/assignments/assignments_screen.dart';
-import '../data/assignment_repository.dart';
+import 'assignments/assignments_screen.dart';
 import 'schedule_screen.dart';
 
 class RootShell extends StatefulWidget {
@@ -15,16 +16,12 @@ class RootShell extends StatefulWidget {
     super.key,
     required this.attendanceService,
     required this.assignmentRepository,
+    this.dashboardViewModel,
   });
 
   final AttendanceService attendanceService;
   final AssignmentRepository assignmentRepository;
-
-  const RootShell({
-    super.key,
-    required this.dashboardViewModel,
-    required this.attendanceService,
-  });
+  final DashboardViewModel? dashboardViewModel;
 
   @override
   State<RootShell> createState() => _RootShellState();
@@ -33,14 +30,16 @@ class RootShell extends StatefulWidget {
 class _RootShellState extends State<RootShell> {
   int _index = 0;
 
-  late final List<Widget> _pages;
+  late final DashboardViewModel _dashboardVM;
 
   @override
   void initState() {
     super.initState();
-    _dashboardVM = DashboardViewModel(
-      termStartDate: DateTime(DateTime.now().year, 1, 15),
-    );
+    _dashboardVM =
+        widget.dashboardViewModel ??
+        DashboardViewModel(
+          termStartDate: DateTime(DateTime.now().year, 1, 15),
+        );
   }
 
   @override
@@ -55,47 +54,43 @@ class _RootShellState extends State<RootShell> {
     final today = DateTime.now();
     final todayStart = DateTime(today.year, today.month, today.day);
     final todayEnd = todayStart.add(const Duration(days: 1));
-    final todaySessions =
-        sessionProvider.sessions
-            .where((s) {
-              final d = DateTime(s.date.year, s.date.month, s.date.day);
-              return !d.isBefore(todayStart) && d.isBefore(todayEnd);
-            })
-            .map(
-              (s) => DashboardSession(
-                title: s.title,
-                date: s.date,
-                startMinutes:
-                    s.startDateTime.hour * 60 + s.startDateTime.minute,
-                endMinutes: s.endDateTime.hour * 60 + s.endDateTime.minute,
-                type: AcademicSession.typeLabel(s.type),
-                location: s.location,
-                isPresent: s.attendance == AttendanceStatus.present
-                    ? true
-                    : s.attendance == AttendanceStatus.absent
-                    ? false
-                    : null,
-              ),
-            )
-            .toList()
-          ..sort((a, b) => a.startMinutes.compareTo(b.startMinutes));
+    final todaySessions = sessionProvider.sessions
+        .where((s) {
+          final d = DateTime(s.date.year, s.date.month, s.date.day);
+          return !d.isBefore(todayStart) && d.isBefore(todayEnd);
+        })
+        .map((s) => DashboardSession(
+              title: s.title,
+              date: s.date,
+              startMinutes: s.startDateTime.hour * 60 + s.startDateTime.minute,
+              endMinutes: s.endDateTime.hour * 60 + s.endDateTime.minute,
+              type: AcademicSession.typeLabel(s.type),
+              location: s.location,
+              isPresent: s.attendance == AttendanceStatus.present
+                  ? true
+                  : s.attendance == AttendanceStatus.absent
+                      ? false
+                      : null,
+            ))
+        .toList()
+      ..sort((a, b) => a.startMinutes.compareTo(b.startMinutes));
 
-    _dashboardVM.setData(assignments: [], sessions: todaySessions);
+    _dashboardVM.setData(
+      assignments: [],
+      sessions: todaySessions,
+    );
 
     final pages = <Widget>[
       DashboardScreen(
-        viewModel: widget.dashboardViewModel,
+        viewModel: _dashboardVM,
         attendanceService: widget.attendanceService,
       ),
-      AssignmentsScreen(repository: widget.assignmentRepository),
+      const AssignmentsScreen(),
       const ScheduleScreen(),
     ];
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_index],
+      body: pages[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),

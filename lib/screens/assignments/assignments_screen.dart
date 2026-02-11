@@ -1,84 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class AssignmentsScreen extends StatefulWidget {
+class AssignmentsScreen extends StatelessWidget {
   const AssignmentsScreen({super.key});
-
-  @override
-  State<AssignmentsScreen> createState() => _AssignmentsScreenState();
-}
-
-class _AssignmentsScreenState extends State<AssignmentsScreen> {
-  final List<_Assignment> _assignments = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Optional: seed a couple of sample items so the UI doesn't look empty
-    _assignments.addAll([
-      _Assignment(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: 'ALU Student Assistant – Dashboard',
-        courseName: 'Mobile Development',
-        dueDate: DateTime.now().add(const Duration(days: 3)),
-        priority: _Priority.high,
-        isCompleted: false,
-      ),
-      _Assignment(
-        id: (DateTime.now().millisecondsSinceEpoch + 1).toString(),
-        title: 'Read Flutter navigation docs',
-        courseName: 'Mobile Development',
-        dueDate: DateTime.now().add(const Duration(days: 6)),
-        priority: _Priority.low,
-        isCompleted: false,
-      ),
-    ]);
-
-    _sortByDueDate();
-  }
-
-  void _sortByDueDate() {
-    _assignments.sort((a, b) => a.dueDate.compareTo(b.dueDate));
-  }
-
-  int get _pendingCount => _assignments.where((a) => !a.isCompleted).length;
-
-  Future<void> _openAddEditSheet({_Assignment? existing}) async {
-    final result = await showModalBottomSheet<_Assignment>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _AssignmentFormSheet(existing: existing),
-    );
-
-    if (result == null) return;
-
-    setState(() {
-      if (existing == null) {
-        _assignments.add(result);
-      } else {
-        final idx = _assignments.indexWhere((a) => a.id == existing.id);
-        if (idx != -1) _assignments[idx] = result;
-      }
-      _sortByDueDate();
-    });
-  }
-
-  void _toggleCompleted(_Assignment a, bool value) {
-    setState(() {
-      final idx = _assignments.indexWhere((x) => x.id == a.id);
-      if (idx == -1) return;
-      _assignments[idx] = _assignments[idx].copyWith(isCompleted: value);
-      _sortByDueDate();
-    });
-  }
-
-  void _deleteAssignment(_Assignment a) {
-    setState(() {
-      _assignments.removeWhere((x) => x.id == a.id);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -469,7 +392,7 @@ class _AssignmentFormSheetState extends State<_AssignmentFormSheet> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButtonFormField<_Priority>(
-                        value: _priority,
+                        initialValue: _priority,
                         decoration: _fieldDecoration(''),
                         dropdownColor: const Color(0xFF0B2B4B),
                         items: const [

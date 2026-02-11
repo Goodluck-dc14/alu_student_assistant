@@ -4,9 +4,6 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'data/assignment_repository.dart';
 import 'data/attendance_repository.dart';
-import 'features/attendance/widgets/attendance_history_section.dart';
-import 'features/attendance/widgets/attendance_metric_card.dart';
-import 'features/attendance/widgets/attendance_warning_banner.dart';
 import 'providers/session_provider.dart';
 import 'services/attendance_service.dart';
 

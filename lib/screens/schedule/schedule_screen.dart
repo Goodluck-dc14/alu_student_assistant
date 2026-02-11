@@ -1,174 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class ScheduleScreen extends StatefulWidget {
+class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
 
   @override
-  State<ScheduleScreen> createState() => _ScheduleScreenState();
-}
-
-class _ScheduleScreenState extends State<ScheduleScreen> {
-  DateTime _weekAnchor = _dateOnly(
-    DateTime.now(),
-  ); // any day in the selected week
-  final List<_Session> _sessions = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Optional seed data
-    final today = _dateOnly(DateTime.now());
-    _sessions.addAll([
-      _Session(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: 'Mobile Dev Class',
-        date: today,
-        start: const TimeOfDay(hour: 9, minute: 0),
-        end: const TimeOfDay(hour: 10, minute: 30),
-        location: 'Room B2',
-        type: _SessionType.classType,
-        attendance: _AttendanceState.present,
-      ),
-      _Session(
-        id: (DateTime.now().millisecondsSinceEpoch + 1).toString(),
-        title: 'Study Group',
-        date: today.add(const Duration(days: 2)),
-        start: const TimeOfDay(hour: 16, minute: 0),
-        end: const TimeOfDay(hour: 17, minute: 0),
-        location: 'Library',
-        type: _SessionType.studyGroup,
-        attendance: _AttendanceState.unmarked,
-      ),
-    ]);
-  }
-
-  DateTime get _weekStart => _startOfWeek(_weekAnchor);
-  List<DateTime> get _weekDays =>
-      List.generate(7, (i) => _weekStart.add(Duration(days: i)));
-
-  List<_Session> _sessionsForDay(DateTime d) {
-    final day = _dateOnly(d);
-    final items = _sessions.where((s) => _isSameDay(s.date, day)).toList();
-    items.sort((a, b) => _compareTimes(a.start, b.start));
-    return items;
-  }
-
-  Future<void> _openAddEditSheet({_Session? existing}) async {
-    final result = await showModalBottomSheet<_Session>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _SessionFormSheet(existing: existing),
-    );
-
-    if (result == null) return;
-
-    setState(() {
-      if (existing == null) {
-        _sessions.add(result);
-      } else {
-        final idx = _sessions.indexWhere((s) => s.id == existing.id);
-        if (idx != -1) _sessions[idx] = result;
-      }
-    });
-  }
-
-  void _deleteSession(_Session s) {
-    setState(() => _sessions.removeWhere((x) => x.id == s.id));
-  }
-
-  void _setAttendance(_Session s, _AttendanceState state) {
-    setState(() {
-      final idx = _sessions.indexWhere((x) => x.id == s.id);
-      if (idx == -1) return;
-      _sessions[idx] = _sessions[idx].copyWith(attendance: state);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final bgTop = const Color(0xFF071A2D);
-    final bgBottom = const Color(0xFF0B2B4B);
-
-    final headerRange =
-        '${DateFormat('d MMM').format(_weekStart)} - ${DateFormat('d MMM').format(_weekStart.add(const Duration(days: 6)))}';
-
-    return Scaffold(
-      backgroundColor: bgTop,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Schedule',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Previous week',
-            onPressed: () => setState(
-              () => _weekAnchor = _weekAnchor.subtract(const Duration(days: 7)),
-            ),
-            icon: const Icon(Icons.chevron_left, color: Colors.white),
-          ),
-          Center(
-            child: Text(
-              headerRange,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Next week',
-            onPressed: () => setState(
-              () => _weekAnchor = _weekAnchor.add(const Duration(days: 7)),
-            ),
-            icon: const Icon(Icons.chevron_right, color: Colors.white),
-          ),
-          const SizedBox(width: 6),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openAddEditSheet(),
-        icon: const Icon(Icons.add),
-        label: const Text('New Session'),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [bgTop, bgBottom],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            children: [
-              _WeekStrip(
-                days: _weekDays,
-                anchor: _weekAnchor,
-                onSelect: (d) => setState(() => _weekAnchor = _dateOnly(d)),
-              ),
-              const SizedBox(height: 12),
-              for (final day in _weekDays) ...[
-                _DayCard(
-                  date: day,
-                  sessions: _sessionsForDay(day),
-                  onEdit: (s) => _openAddEditSheet(existing: s),
-                  onDelete: _deleteSession,
-                  onAttendanceChange: _setAttendance,
-                ),
-                const SizedBox(height: 12),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
+    return const Scaffold(body: Center(child: Text('Schedule Screen')));
   }
 }
 
@@ -585,7 +422,7 @@ class _SessionFormSheetState extends State<_SessionFormSheet> {
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<_SessionType>(
-                  value: _type,
+                  initialValue: _type,
                   decoration: _fieldDecoration('Session type'),
                   dropdownColor: const Color(0xFF0B2B4B),
                   items: _SessionType.values
