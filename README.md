@@ -1,4 +1,4 @@
-﻿# ALU Student Academic Platform
+# ALU Student Academic Platform
 
 
 A comprehensive mobile application designed to help African Leadership University students manage their academic responsibilities, track assignments, monitor attendance, and organize their class schedules.
@@ -9,22 +9,47 @@ A comprehensive mobile application designed to help African Leadership Universit
 
 ```
 lib/
-├── main.dart                 # Application entry point
-├── screens/
-│   ├── dashboard_screen.dart # Home dashboard
-│   ├── assignments_screen.dart # Assignment management
-│   └── schedule_screen.dart  # Session scheduling
+├── main.dart                     # Application entry point
+├── core/
+│   ├── constants/
+│   │   └── attendance_constants.dart  # Attendance-related constants
+│   └── theme/
+│       ├── app_colors.dart       # Centralised color definitions
+│       └── app_theme.dart        # Theme configuration
+├── data/
+│   ├── assignment_repository.dart # Data access for assignments
+│   └── attendance_repository.dart # Data access for attendance
 ├── models/
-│   ├── assignment.dart       # Assignment data model
-│   ├── session.dart          # Session data model
-│   └── attendance.dart       # Attendance data model
+│   ├── academic_session.dart     # Academic session model
+│   ├── assignment.dart           # Assignment data model
+│   └── attendance_record.dart    # Attendance record model
+├── providers/
+│   └── session_provider.dart     # App-wide session state/provider
 ├── services/
-│   ├── storage_service.dart  # Data persistence logic
-│   └── attendance_service.dart # Attendance calculations
-└── widgets/
-    ├── assignment_card.dart  # Reusable assignment widget
-    ├── session_card.dart     # Reusable session widget
-    └── dashboard_metric.dart # Dashboard metric widgets
+│   └── attendance_service.dart   # Attendance business logic
+├── features/
+│   ├── assignments/
+│   │   ├── assignment_form_screen.dart  # Assignment creation/editing
+│   │   ├── assignments_screen.dart      # Assignments listing
+│   │   └── widgets/
+│   │       └── assignment_list_item.dart # Assignment list item widget
+│   └── attendance/
+│       └── widgets/
+│           ├── attendance_history_section.dart  # Attendance history UI
+│           ├── attendance_metric_card.dart      # Attendance metric cards
+│           └── attendance_warning_banner.dart   # Attendance warning banner
+└── screens/
+    ├── app_shell.dart            # App shell/navigation container
+    ├── root_shell.dart           # Root navigation shell
+    ├── login_screen.dart         # Authentication screen
+    ├── dashboard/
+    │   ├── dashboard_screen.dart # Home dashboard
+    │   └── dashboard_view_model.dart # Dashboard state & logic
+    ├── assignments/
+    │   └── assignments_screen.dart   # Assignments screen (shell version)
+    ├── schedule/
+    │   └── schedule_screen.dart  # Schedule view (nested route)
+    └── schedule_screen.dart      # Legacy/global schedule screen
 ```
 
 
