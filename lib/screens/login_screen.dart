@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      // Navigate into the app shell (with bottom navigation)
                       Navigator.pushReplacementNamed(context, '/dashboard');
                     }
                   },

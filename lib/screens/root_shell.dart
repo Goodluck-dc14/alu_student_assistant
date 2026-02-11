@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/academic_session.dart';
 import '../providers/session_provider.dart';
 import '../services/attendance_service.dart';
+import '../data/assignment_repository.dart';
 
 import 'dashboard/dashboard_screen.dart';
 import 'dashboard/dashboard_view_model.dart';
@@ -11,9 +12,16 @@ import 'assignments/assignments_screen.dart';
 import 'schedule_screen.dart';
 
 class RootShell extends StatefulWidget {
-  const RootShell({super.key, required this.attendanceService});
+  const RootShell({
+    super.key,
+    required this.attendanceService,
+    required this.assignmentRepository,
+    this.dashboardViewModel,
+  });
 
   final AttendanceService attendanceService;
+  final AssignmentRepository assignmentRepository;
+  final DashboardViewModel? dashboardViewModel;
 
   @override
   State<RootShell> createState() => _RootShellState();
@@ -27,9 +35,11 @@ class _RootShellState extends State<RootShell> {
   @override
   void initState() {
     super.initState();
-    _dashboardVM = DashboardViewModel(
-      termStartDate: DateTime(DateTime.now().year, 1, 15),
-    );
+    _dashboardVM =
+        widget.dashboardViewModel ??
+        DashboardViewModel(
+          termStartDate: DateTime(DateTime.now().year, 1, 15),
+        );
   }
 
   @override
