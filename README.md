@@ -68,8 +68,8 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone [your-repository-url]
-   cd alu-student-platform
+   git clone https://github.com/Goodluck-dc14/alu_student_assistant.git
+   cd alu_student_assistant
    ```
 
 
